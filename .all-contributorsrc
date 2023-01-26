@@ -1,0 +1,29 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "commitConvention": "angular",
+  "contributors": [
+    {
+      "login": "BrainBuzzer",
+      "name": "Aditya Giri",
+      "avatar_url": "https://avatars.githubusercontent.com/u/10351046?v=4",
+      "profile": "https://brainbuzzer.me",
+      "contributions": [
+        "doc",
+        "code",
+        "ideas",
+        "maintenance",
+        "question"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "skipCi": true,
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "projectName": "php-ch",
+  "projectOwner": "BrainBuzzer"
+}
