@@ -1,4 +1,7 @@
 # PHP Version Manager for Windows
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ## What is it?
 
@@ -51,10 +54,14 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://brainbuzzer.me"><img src="https://avatars.githubusercontent.com/u/10351046?v=4?s=100" width="100px;" alt="Aditya Giri"/><br /><sub><b>Aditya Giri</b></sub></a><br /><a href="https://github.com/BrainBuzzer/php-ch/commits?author=BrainBuzzer" title="Documentation">📖</a> <a href="https://github.com/BrainBuzzer/php-ch/commits?author=BrainBuzzer" title="Code">💻</a> <a href="#ideas-BrainBuzzer" title="Ideas, Planning, & Feedback">🤔</a> <a href="#maintenance-BrainBuzzer" title="Maintenance">🚧</a> <a href="#question-BrainBuzzer" title="Answering Questions">💬</a></td>
+    </tr>
+  </tbody>
+</table>
 
 <!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
 <!-- ALL-CONTRIBUTORS-LIST:END -->
-
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
-
