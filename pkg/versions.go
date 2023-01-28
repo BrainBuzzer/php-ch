@@ -10,14 +10,62 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"sort"
 	"strings"
 
+	"github.com/Masterminds/semver/v3"
 	"github.com/schollz/progressbar/v3"
 )
 
 var env = Environment{
 	Root:    os.Getenv("PHP_HOME"),
 	Symlink: os.Getenv("PHP_SYMLINK"),
+}
+
+func ListAllVersions() ([]*semver.Version, error) {
+	// fetch all versions from https://windows.php.net/downloads/releases/archives/
+	// print all versions
+	resp, err := http.Get("https://windows.php.net/downloads/releases/archives/")
+	if err != nil {
+		fmt.Println("Error while fetching versions: ", err)
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println("Error while fetching versions: ", err)
+		return nil, err
+	}
+
+	versions := strings.Split(string(body), "php-")
+	allVersions := make(map[string]bool)
+	for _, version := range versions {
+		if strings.Contains(version, "-Win32") && !strings.Contains(version, "pack") {
+			allVersions[strings.Split(version, "-")[0]] = true
+		}
+	}
+
+	// convert map[string]bool to []string
+	var versionsList []string
+	for version := range allVersions {
+		versionsList = append(versionsList, version)
+	}
+
+	vs := make([]*semver.Version, len(versionsList))
+	for i, r := range versionsList {
+		v, err := semver.NewVersion(r)
+		if err != nil {
+			fmt.Println("Error while fetching versions: ", err)
+			return nil, err
+		}
+
+		vs[i] = v
+	}
+
+	sort.Sort(semver.Collection(vs))
+
+	return vs, nil
 }
 
 func ChangeVersion(version string) {
@@ -27,8 +75,7 @@ func ChangeVersion(version string) {
 	installdir := filepath.Join(env.Root, "versions", version)
 
 	if _, err := os.Stat(installdir); os.IsNotExist(err) {
-		fmt.Println("Version", version, "does not exist")
-		fmt.Println("Downloading " + version + "...")
+		fmt.Println("Version", version, "does not exist on local machine, checking if version is available on PHP Servers.")
 		DownloadVersion(version)
 	} else {
 		if _, err := os.Stat(env.Symlink); !os.IsNotExist(err) {
@@ -49,24 +96,50 @@ func ChangeVersion(version string) {
 }
 
 func DownloadVersion(version string) {
-	// check if system is 32 or 64 bit
-	// download the correct version
-	// extract the zip file
-	// move all content from where to C:\php\versions\version
-	// open php.ini from C:\php\versions\version and add the following lines
-	// extension_dir = "ext"
+	allVersions, err := ListAllVersions()
+	if err != nil {
+		panic(err)
+	}
 
-	switch version {
-	case "8.2":
-		downloadAndInstall("https://windows.php.net/downloads/releases/php-8.2.1-Win32-vs16-x64.zip", version)
-	case "8.1":
-		downloadAndInstall("https://windows.php.net/downloads/releases/php-8.1.14-Win32-vs16-x64.zip", version)
-	case "8.0":
-		downloadAndInstall("https://windows.php.net/downloads/releases/php-8.0.27-Win32-vs16-x64.zip", version)
-	case "7.4":
-		downloadAndInstall("https://windows.php.net/downloads/releases/php-7.4.33-Win32-vc15-x64.zip", version)
-	default:
-		fmt.Println("Version", version, "does not exist")
+	isPresent := false
+	for _, v := range allVersions {
+		if v.Original() == version {
+			isPresent = true
+			break
+		}
+	}
+
+	if isPresent {
+		resp, err := http.Get("https://windows.php.net/downloads/releases/archives/")
+		if err != nil {
+			fmt.Println("Error while fetching versions: ", err)
+		}
+		defer resp.Body.Close()
+
+		body, err := io.ReadAll(resp.Body)
+		if err != nil {
+			fmt.Println("Error while fetching versions: ", err)
+		}
+
+		versions := strings.Split(string(body), "php-"+version+"-Win32-")
+		matched := false
+		for _, v := range versions {
+			// test regex for php-{version}-Win32-{something}-x64.zip
+			part := strings.Split(v, ".zip")[0]
+			if strings.Contains(part, "x64") {
+				matched = true
+				fmt.Println("Found x64 version: ", part)
+				url := "https://windows.php.net/downloads/releases/archives/php-" + version + "-Win32-" + part + ".zip"
+				fmt.Println("Downloading from: ", url)
+				downloadAndInstall(url, version)
+				break
+			}
+		}
+
+		if !matched {
+			fmt.Println("Could not find x64 version for PHP " + version)
+		}
+
 	}
 }
 
@@ -140,6 +213,18 @@ func downloadAndInstall(url string, version string) {
 
 	// copy php.ini from C:\php\versions\version\php.ini-development to C:\php\versions\version\php.ini
 	os.Rename(dst+"\\php.ini-development", dst+"\\php.ini")
+
+	// edit php.ini and add the following lines
+	// extension_dir = "ext"
+	file, err := os.OpenFile(dst+"\\php.ini", os.O_APPEND|os.O_WRONLY, 0644)
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+
+	if _, err = file.WriteString("extension_dir = \"ext\""); err != nil {
+		panic(err)
+	}
 
 	// change version to the one that was just downloaded
 	ChangeVersion(version)

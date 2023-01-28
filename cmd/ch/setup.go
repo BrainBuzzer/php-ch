@@ -26,7 +26,7 @@ var setupCommand = &cobra.Command{
 		_, err := exec.Command("php", "-v").Output()
 		if err != nil {
 			fmt.Println("No PHP installation found. Installing the latest PHP.")
-			pkg.ChangeVersion("8.2")
+			pkg.ChangeVersion("8.2.0")
 		}
 
 		// check if the exec path of php is the same as the PHP_HOME env variable

@@ -9,6 +9,7 @@ require (
 )
 
 require (
+	github.com/Masterminds/semver/v3 v3.2.0
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/mattn/go-runewidth v0.0.14 // indirect
 	github.com/mitchellh/colorstring v0.0.0-20190213212951-d06e56a500db // indirect
