@@ -13,25 +13,27 @@ Download the latest release by heading over to our [releases](https://github.com
 
 ## Usage
 
+### Listing installed PHP versions
+
+To list all the installed PHP versions, simply run the following command:
+
+```sh
+php-ch list
+```
+
 ### Switching PHP versions
 
 To switch to a different version of PHP, simply run the following command:
 
-```cmd
+```sh
 php-ch set [version]
 ```
-
-Currently supported PHP versions are:
-7.4
-8.0
-8.1
-8.2
 
 ### Editing php.ini file
 
 You can edit the php.ini file for the current PHP version by running the following command:
 
-```cmd
+```sh
 php-ch ini
 ```
 
@@ -39,7 +41,7 @@ php-ch ini
 
 You can edit the php.ini file for a specific PHP version by running the following command:
 
-```cmd
+```sh
 php-ch ini [version]
 ```
 
