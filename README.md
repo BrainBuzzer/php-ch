@@ -24,7 +24,23 @@ Currently supported PHP versions are:
 8.1
 8.2
 
-# Contributing
+### Editing php.ini file
+
+You can edit the php.ini file for the current PHP version by running the following command:
+
+```cmd
+php-ch ini
+```
+
+### Editing php.ini file for a specific PHP version
+
+You can edit the php.ini file for a specific PHP version by running the following command:
+
+```cmd
+php-ch ini [version]
+```
+
+## Contributing
 
 Feel free to open an issue or a pull request if you have any suggestions or bug reports.
 

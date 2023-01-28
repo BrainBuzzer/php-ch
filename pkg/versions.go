@@ -70,6 +70,10 @@ func DownloadVersion(version string) {
 	}
 }
 
+func GetVersionPath(version string) string {
+	return filepath.Join(env.Root, "versions", version)
+}
+
 func downloadAndInstall(url string, version string) {
 	req, _ := http.NewRequest("GET", url, nil)
 	resp, _ := http.DefaultClient.Do(req)
